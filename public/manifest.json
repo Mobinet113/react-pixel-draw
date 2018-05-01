@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "React Pixel Draw",
+  "name": "A super simple drawing script",
   "icons": [
     {
       "src": "favicon.ico",
