@@ -16,16 +16,11 @@ class ColourPicker extends Component {
     };
 
     this.handleColourChange = this.handleColourChange.bind(this);
-    this.handleDrag = this.handleDrag.bind(this);
   }
 
   handleColourChange(colour){
     this.setState({selectedColour: colour.hex});
     this.props.onChange(colour);
-  }
-
-  handleDrag(e){
-    console.log(e);
   }
 
   render() {
@@ -39,7 +34,7 @@ class ColourPicker extends Component {
     };
 
     return (
-      <div id="colour-picker" style={styles.container} onMouseEnter={this.handleDrag}>
+      <div id="colour-picker" style={styles.container}>
         <SketchPicker color={ this.state.selectedColour } onChangeComplete={this.handleColourChange} />
       </div>
     );

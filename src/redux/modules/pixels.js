@@ -1,5 +1,6 @@
 import { pixelState } from '../initialState';
 import update from 'react-addons-update';
+import axios from 'axios';
 
 // Initial State
 
@@ -9,6 +10,7 @@ const initialState = {
 
 // Actions
 
+const LOAD_INITIAL_PIXELS = 'LOAD_INITIAL_PIXELS';
 const UPDATE_PIXEL = 'UPDATE_PIXEL';
 
 // Reducer
@@ -16,12 +18,13 @@ const UPDATE_PIXEL = 'UPDATE_PIXEL';
 export default function reducer(state = initialState.pixels, action) {
   switch (action.type) {
     case UPDATE_PIXEL:
-
       return update(state, {
         [action.pixels.id]: {
           colour: {$set: action.pixels.colour}
         }
       });
+    case LOAD_INITIAL_PIXELS:
+      return state;
 
     default:
       return state;
@@ -30,6 +33,9 @@ export default function reducer(state = initialState.pixels, action) {
 
 // Action Creators
 
+export function loadInitialPixelsSuccess(pixels) {
+  return { type: LOAD_INITIAL_PIXELS, pixels };
+}
 
 export function updatePixelSuccess(pixels) {
   return { type: UPDATE_PIXEL, pixels };
@@ -37,10 +43,15 @@ export function updatePixelSuccess(pixels) {
 
 // Thunks
 
-export function updatePixel(id, colour) {
+export function loadInitialPixels(socket){
   return function (dispatch) {
-    console.log("Updating Pixel: ", id + " to " + colour);
-    dispatch(updatePixelSuccess({id: id, colour: colour}));
+    socket.emit('loadInitialPixels');
+  };
+}
 
+export function updatePixel(socket, id, colour) {
+  return function (dispatch) {
+    dispatch(updatePixelSuccess({id: id, colour: colour}));
+    socket.emit('updatePixel', {id: id, colour: colour})
   };
 }

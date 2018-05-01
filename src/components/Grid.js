@@ -2,13 +2,22 @@ import React, {Component} from 'react';
 import Pixel from './Pixel';
 import ColourPicker from './ColourPicker';
 import ExportGrid from './ExportGrid';
+import io from "socket.io-client"
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux'
 import {updatePixel} from '../redux/modules/pixels';
 
+let socket;
+
 class Grid extends Component {
   constructor(props, context) {
     super(props, context);
+
+    socket = io.connect("http://localhost:5000");
+
+    socket.on('updatePixel',(res)=>{
+      console.dir('___', res);
+    });
 
     this.state = {
       activeColour: 'black',
@@ -24,8 +33,12 @@ class Grid extends Component {
     this.setState({loaded: true});
   }
 
+  componentWillUnmount() {
+    socket.disconnect();
+  }
+
   handlePixelClick(id){
-    this.props.updatePixel(id, this.state.activeColour);
+    this.props.updatePixel(socket, id, this.state.activeColour);
   }
 
   handleColourChange(colour){
@@ -42,8 +55,6 @@ class Grid extends Component {
               <Pixel index={index} key={index} colour={pixel.colour} onClick={this.handlePixelClick}/>
             )}
           </div>
-
-          <ExportGrid/>
 
           <ColourPicker onChange={this.handleColourChange}/>
 
