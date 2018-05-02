@@ -5,7 +5,7 @@ import ExportGrid from './ExportGrid';
 import io from "socket.io-client"
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux'
-import {updatePixel} from '../redux/modules/pixels';
+import {loadInitialPixels, loadInitialPixelsSuccess, updatePixel} from '../redux/modules/pixels';
 
 let socket;
 
@@ -15,8 +15,8 @@ class Grid extends Component {
 
     socket = io.connect("http://localhost:5000");
 
-    socket.on('updatePixel',(res)=>{
-      console.dir('___', res);
+    socket.on('updatePixel', (results) => {
+      this.props.updatePixel(false, results.id, results.colour);
     });
 
     this.state = {
@@ -30,6 +30,7 @@ class Grid extends Component {
   }
 
   componentDidMount(){
+    this.props.loadPixels(socket);
     this.setState({loaded: true});
   }
 
@@ -83,6 +84,7 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
+    loadPixels: loadInitialPixels,
     updatePixel: updatePixel
   }, dispatch);
 }

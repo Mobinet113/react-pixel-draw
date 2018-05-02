@@ -8,10 +8,21 @@ var io    = socketServer(serve);
 
 serve.listen(5000,()=> { console.log("+++ Pixel Grid Express Server Running +++") });
 
+const pixelState = () => {
+  let defaultPixelFormation = [];
+
+  for ( let i = 0; i < 2500; i++ ){
+    defaultPixelFormation.push({key: i, colour: "#FFF"});
+  }
+
+  return defaultPixelFormation;
+};
+
 /***************************************************************************************** */
 /** Socket logic starts here																                                 */
 /***************************************************************************************** */
 const connections = [];
+const initialState = pixelState();
 
 io.on('connection', function (socket) {
 
@@ -27,12 +38,17 @@ io.on('connection', function (socket) {
 
   socket.on('loadInitialPixels', () => {
     console.log("Loading initial pixels");
-    io.emit( [{key: 0, colour: "red"}] );
+    io.emit( 'loadInitialPixels', initialState);
   });
 
   socket.on('updatePixel', (addData) => {
+
+    addData.user = socket.id;
+
+    initialState[addData.id].colour = addData.colour;
+
     console.log("Pixel Updated ", addData);
-    io.emit("Pixel Updated ", addData)
+    socket.broadcast.emit("updatePixel", addData)
   });
 
 });

@@ -27,7 +27,7 @@ class ColourPicker extends Component {
 
     let styles = {
       container: {
-        position: "fixed",
+        position: "relative",
         left: this.state.position.x,
         top: this.state.position.y
       }

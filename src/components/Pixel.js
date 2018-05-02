@@ -33,7 +33,7 @@ class Pixel extends Component {
     };
 
     return (
-      <div className="Pixel"
+      <div className="pixel"
            style={pixelStyle}
            onClick={this.handleClick}
       />

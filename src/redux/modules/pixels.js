@@ -24,7 +24,7 @@ export default function reducer(state = initialState.pixels, action) {
         }
       });
     case LOAD_INITIAL_PIXELS:
-      return state;
+      return action.pixels;
 
     default:
       return state;
@@ -46,12 +46,21 @@ export function updatePixelSuccess(pixels) {
 export function loadInitialPixels(socket){
   return function (dispatch) {
     socket.emit('loadInitialPixels');
+
+    socket.on('loadInitialPixels', (results) => {
+      console.log(results);
+      dispatch(loadInitialPixelsSuccess(results));
+    });
+
   };
 }
 
 export function updatePixel(socket, id, colour) {
   return function (dispatch) {
     dispatch(updatePixelSuccess({id: id, colour: colour}));
-    socket.emit('updatePixel', {id: id, colour: colour})
+
+    if ( socket ) {
+      socket.emit('updatePixel', {id: id, colour: colour})
+    }
   };
 }
