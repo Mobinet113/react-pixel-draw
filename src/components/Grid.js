@@ -12,7 +12,7 @@ class Grid extends Component {
   constructor(props, context) {
     super(props, context);
 
-    socket = io.connect("http://localhost:5000");
+    socket = io.connect(process.env.REACT_APP_SERVER_ENDPOINT);
 
     socket.on('updatePixel', (results) => {
       this.props.updatePixel(false, results.id, results.colour);

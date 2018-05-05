@@ -6,7 +6,7 @@ const app = express();
 var serve = http.createServer(app);
 var io    = socketServer(serve);
 
-serve.listen(5000,()=> { console.log("+++ Pixel Grid Express Server Running +++") });
+serve.listen(5000, () => { console.log("+++ Pixel Grid Express Server Running +++") });
 
 const pixelState = () => {
   let defaultPixelFormation = [];
@@ -32,9 +32,6 @@ io.on('connection', function (socket) {
   socket.on('disconnect', function(){
     console.log('Disconnected - '+ socket.id);
   });
-
-  // 		.cursor()
-  // cursor.on('data',(res)=> {socket.emit('initialList',res)})
 
   socket.on('loadInitialPixels', () => {
     console.log("Loading initial pixels");
