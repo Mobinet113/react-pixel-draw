@@ -1,6 +1,5 @@
 import { pixelState } from '../initialState';
 import update from 'react-addons-update';
-import axios from 'axios';
 
 // Initial State
 

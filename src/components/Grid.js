@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import Pixel from './Pixel';
 import ColourPicker from './ColourPicker';
-import ExportGrid from './ExportGrid';
 import io from "socket.io-client"
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux'
-import {loadInitialPixels, loadInitialPixelsSuccess, updatePixel} from '../redux/modules/pixels';
+import {loadInitialPixels, updatePixel} from '../redux/modules/pixels';
 
 let socket;
 
@@ -22,11 +21,15 @@ class Grid extends Component {
     this.state = {
       activeColour: 'black',
       formation: [],
-      loaded: false
+      loaded: false,
+      mouseDown: false
     };
 
-    this.handlePixelClick   = this.handlePixelClick.bind(this);
-    this.handleColourChange = this.handleColourChange.bind(this);
+    this.handlePixelClick    = this.handlePixelClick.bind(this);
+    this.handleColourChange  = this.handleColourChange.bind(this);
+    this.handlePixelHover    = this.handlePixelHover.bind(this);
+    this.handleGridMouseDown = this.handleGridMouseDown.bind(this);
+    this.handleGridMouseUp   = this.handleGridMouseUp.bind(this);
   }
 
   componentDidMount(){
@@ -38,8 +41,22 @@ class Grid extends Component {
     socket.disconnect();
   }
 
+  handleGridMouseDown(){
+    this.setState({ mouseDown: true });
+  }
+
+  handleGridMouseUp(){
+    this.setState({ mouseDown: false });
+  }
+
   handlePixelClick(id){
     this.props.updatePixel(socket, id, this.state.activeColour);
+  }
+
+  handlePixelHover(id){
+    if ( this.state.mouseDown ) {
+      this.props.updatePixel(socket, id, this.state.activeColour);
+    }
   }
 
   handleColourChange(colour){
@@ -51,9 +68,13 @@ class Grid extends Component {
     if ( this.state.loaded ) {
       return (
         <div>
-          <div id="grid" style={styles.gridStyles}>
+          <div id="grid" style={styles.gridStyles} onMouseDown={this.handleGridMouseDown} onMouseUp={this.handleGridMouseUp}>
             {this.props.pixels.map((pixel, index) =>
-              <Pixel index={index} key={index} colour={pixel.colour} onClick={this.handlePixelClick}/>
+              <Pixel index={index}
+                     key={index}
+                     colour={pixel.colour}
+                     onMouseOver={this.handlePixelHover}
+                     onClick={this.handlePixelClick}/>
             )}
           </div>
 

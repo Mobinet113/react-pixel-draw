@@ -10,10 +10,15 @@ class Pixel extends Component {
     };
 
     this.handleClick = this.handleClick.bind(this);
+    this.handleMouseOver = this.handleMouseOver.bind(this);
   }
 
   handleClick(){
     this.props.onClick(this.props.index);
+  }
+
+  handleMouseOver(){
+    this.props.onMouseOver(this.props.index);
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
@@ -36,6 +41,7 @@ class Pixel extends Component {
       <div className="pixel"
            style={pixelStyle}
            onClick={this.handleClick}
+           onMouseOver={this.handleMouseOver}
       />
     );
   }
@@ -46,7 +52,8 @@ Pixel.defaultProps = {
   colour: "#FFF",
   width: 10,
   height: 10,
-  onClick: () => void(0)
+  onClick: () => void(0),
+  onMouseOver: () => void(0)
 };
 
 Pixel.propTypes = {
@@ -54,9 +61,8 @@ Pixel.propTypes = {
   colour: PropTypes.string,
   width: PropTypes.number,
   height: PropTypes.number,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  onMouseOver: PropTypes.func
 };
-
-
 
 export default Pixel;
