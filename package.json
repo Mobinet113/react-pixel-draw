@@ -5,7 +5,7 @@
   "dependencies": {
     "axios": "^0.18.1",
     "dotenv": "^5.0.1",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "mongodb": "^3.0.7",
     "nodemon": "^1.17.3",
     "react": "^16.3.2",
